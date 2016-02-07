@@ -1,7 +1,6 @@
 package doygo
 
 import (
-	//"fmt"
 	"math"
 
 	"leung.com/utilities/mathematics"
@@ -89,12 +88,13 @@ func YearDoy2Cal(year, doy int64) (oyear, omonth, oday int64) {
 
 		get_month := func(year, doy int64) (oyear, omonth, oday int64) {
 			if doy > 0 && doy <= max_doy {
+				oyear = year
 				for i, v := range []int64{
 					334, 304, 273, 243, 212, 181, 151, 120, 90, 59, 31} {
 					if doy > v {
-						oyear = year
 						omonth = 12 - int64(i)
 						oday = doy - v
+						break
 					} else {
 						oyear = year
 						omonth = 1

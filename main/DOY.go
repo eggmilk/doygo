@@ -11,11 +11,11 @@ import (
 
 func main() {
 
-	number_of_args := len(os.Args)
+	number_of_args := len(os.Args[1:])
 
 	dt := new(doygo.Datetime)
 
-	if number_of_args == 4 {
+	if number_of_args == 3 {
 		// year nonth day
 		dt.YEAR, _ = strconv.ParseInt(os.Args[1], 10, 64)
 		dt.MONTH, _ = strconv.ParseInt(os.Args[2], 10, 64)
@@ -32,7 +32,7 @@ func main() {
 			dt.DECIMALYEAR = float64(dt.YEAR) + float64(dt.DOY-1)/365.0
 		}
 
-	} else if number_of_args == 3 {
+	} else if number_of_args == 2 {
 
 		if strings.HasSuffix(os.Args[1], "w") {
 			//gpsweek gpsweekday

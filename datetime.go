@@ -1,6 +1,7 @@
 package doygo
 
 import (
+	// "fmt"
 	"strconv"
 )
 
@@ -181,6 +182,59 @@ func Doy(left ...interface{}) (datetime Datetime) {
 			datetime.MINUTE,
 			datetime.SECOND)
 		datetime.GPSWEEKDAY = Mjd2Weekday(datetime.MJD)
+
+	} else if len(left) == 4 {
+
+		if left[0] == "w" && left[2] == "d" {
+
+			// week parsing
+			switch left[1].(type) {
+			case int64:
+				datetime.GPSWEEK = int64(left[1].(int64))
+			case int:
+				datetime.GPSWEEK = int64(left[1].(int))
+			case string:
+				week, _ := strconv.Atoi(left[1].(string))
+				datetime.GPSWEEK = int64(week)
+			}
+			// weekday parsing
+			switch left[3].(type) {
+			case int64:
+				datetime.GPSWEEKDAY = int64(left[3].(int64))
+			case int:
+				datetime.GPSWEEKDAY = int64(left[3].(int))
+			case string:
+				wd, _ := strconv.Atoi(left[3].(string))
+				datetime.GPSWEEKDAY = int64(wd)
+			}
+			// weekday to cal
+			datetime.YEAR,
+				datetime.MONTH,
+				datetime.DAY,
+				datetime.HOUR,
+				datetime.MINUTE,
+				datetime.SECOND =
+				GPSweekday2Cal(datetime.GPSWEEK, datetime.GPSWEEKDAY)
+
+			// get doy
+			_, datetime.DOY = Cal2YearDoy(
+				datetime.YEAR, datetime.MONTH, datetime.DAY)
+			// get decimal year
+			if LeapYear(datetime.YEAR) {
+				datetime.DECIMALYEAR = float64(datetime.DOY-1) / 366.0
+			} else {
+				datetime.DECIMALYEAR = float64(datetime.DOY-1) / 365.0
+			}
+			// get jd and mjd
+			datetime.JD = Cal2Jd(
+				datetime.YEAR,
+				datetime.MONTH,
+				datetime.DAY,
+				datetime.HOUR,
+				datetime.MINUTE,
+				datetime.SECOND)
+			datetime.MJD = datetime.JD - 2400000.5
+		}
 
 	} else if len(left) == 2 {
 
